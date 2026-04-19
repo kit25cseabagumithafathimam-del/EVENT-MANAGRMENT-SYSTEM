@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Organizer Dashboard | EventLiquid{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <div class="flex items-center justify-between border-b border-gray-700 pb-4">
+        <div>
+            <h1 class="text-3xl font-extrabold text-white">Organizer Dashboard</h1>
+            <p class="text-gray-400 mt-1">Manage events and track registrations</p>
+        </div>
+        <div class="flex space-x-4">
+            <div class="glass-panel px-4 py-2 text-center shadow-lg hidden sm:block">
+                <span class="block text-2xl font-bold text-indigo-400">{{ events|length }}</span>
+                <span class="text-xs text-gray-400 uppercase tracking-wider">Events Created</span>
+            </div>
+            <a href="{% url 'create_event' %}" class="btn-liquid flex items-center justify-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                Create Event
+            </a>
+        </div>
+    </div>
+
+    {% if events %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for event in events %}
+                <div class="glass-card p-6 flex flex-col relative">
+                    <!-- Actions -->
+                    <div class="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <!-- Add edit/delete buttons later if needed -->
+                    </div>
+
+                    <div class="mb-4">
+                        {% if event.category %}
+                            <span class="text-xs font-semibold uppercase tracking-wider text-purple-400 bg-purple-400/10 px-2 py-1 rounded inline-block mb-2">{{ event.category.name }}</span>
+                        {% endif %}
+                        <h3 class="text-xl font-bold text-white mb-1"><a href="{% url 'event_detail' event.id %}" class="hover:underline">{{ event.title }}</a></h3>
+                        <p class="text-gray-400 text-sm">{{ event.date|date:"M d, Y" }} at {{ event.time|time:"g:i A" }}</p>
+                    </div>
+
+                    <div class="mt-auto pt-4 border-t border-gray-700">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-medium text-gray-300">Registrations</span>
+                            <span class="text-sm font-bold text-white">{{ event.registered_count }} / {{ event.max_capacity }}</span>
+                        </div>
+                        <div class="w-full bg-gray-800 rounded-full h-1.5 mb-2">
+                            <div class="bg-gradient-to-r from-green-400 to-blue-500 h-1.5 rounded-full" style="width: {% widthratio event.registered_count event.max_capacity 100 %}%"></div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="glass-panel p-12 text-center mt-8 border border-dashed border-gray-600">
+            <svg class="w-16 h-16 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            <h3 class="text-xl font-medium text-white mb-2">No Events Created</h3>
+            <p class="text-gray-400 mb-6">You haven't organized any events yet. Start by creating your first event.</p>
+            <a href="{% url 'create_event' %}" class="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg transition border border-white/10 font-semibold">Create Event</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

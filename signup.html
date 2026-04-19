@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up | EventLiquid{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center min-h-[70vh] py-10">
+    <div class="glass-panel w-full max-w-lg p-8 relative overflow-hidden">
+        <!-- Decoration -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10"></div>
+        
+        <div class="relative z-10 text-center mb-8">
+            <h2 class="text-3xl font-extrabold text-white">Join EventLiquid</h2>
+            <p class="text-gray-400 mt-2 text-sm">Experience the modern way to manage events.</p>
+        </div>
+
+        {% if form.non_field_errors %}
+        <div class="glass-panel p-4 mb-6 border border-red-500/50 bg-red-500/10 text-red-200 rounded-xl relative z-10 text-sm">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <form method="POST" class="relative z-10 space-y-5">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {% if field.errors %}
+                        <div class="text-red-400 text-xs mb-1">{{ field.errors.0 }}</div>
+                    {% endif %}
+                    {% if field.name == 'role' %}
+                        <select name="{{ field.html_name }}" id="{{ field.id_for_label }}" class="glass-input appearance-none">
+                            {% for group_val, group_label in field.field.choices %}
+                                <option value="{{ group_val }}" class="bg-gray-800 text-white">{{ group_label }}</option>
+                            {% endfor %}
+                        </select>
+                    {% else %}
+                        <input type="{{ field.field.widget.input_type }}" name="{{ field.html_name }}" id="{{ field.id_for_label }}" class="glass-input" required>
+                    {% endif %}
+                    {% if field.help_text %}
+                        <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn-liquid w-full py-3 mt-6 text-lg tracking-wide rounded-xl">Create Account</button>
+        </form>
+
+        <p class="mt-8 text-center text-sm text-gray-400 relative z-10">
+            Already have an account? 
+            <a href="{% url 'login' %}" class="font-medium text-indigo-400 hover:text-indigo-300 transition">Sign in</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

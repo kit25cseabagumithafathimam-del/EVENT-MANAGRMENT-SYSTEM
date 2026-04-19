@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}My Dashboard | EventLiquid{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <div class="flex items-center justify-between border-b border-gray-700 pb-4">
+        <div>
+            <h1 class="text-3xl font-extrabold text-white">Student Dashboard</h1>
+            <p class="text-gray-400 mt-1">Manage your event registrations</p>
+        </div>
+        <div class="glass-panel px-4 py-2 text-center shadow-lg">
+            <span class="block text-2xl font-bold text-indigo-400">{{ registrations|length }}</span>
+            <span class="text-xs text-gray-400 uppercase tracking-wider">Registrations</span>
+        </div>
+    </div>
+
+    {% if registrations %}
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {% for reg in registrations %}
+                <div class="glass-card flex overflow-hidden group">
+                    <!-- Date Sidebar -->
+                    <div class="w-24 bg-gradient-to-b from-indigo-900/50 to-purple-900/50 flex flex-col items-center justify-center p-4 border-r border-gray-700/50">
+                        <span class="text-sm text-purple-300 font-semibold uppercase">{{ reg.event.date|date:"M" }}</span>
+                        <span class="text-3xl font-bold text-white">{{ reg.event.date|date:"d" }}</span>
+                    </div>
+                    
+                    <div class="p-6 flex-grow flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-bold text-white group-hover:text-indigo-300 transition-colors">
+                                    <a href="{% url 'event_detail' reg.event.id %}">{{ reg.event.title }}</a>
+                                </h3>
+                                <span class="bg-green-500/20 text-green-300 text-xs px-2 py-1 rounded border border-green-500/30">Active</span>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-4 line-clamp-2">{{ reg.event.description }}</p>
+                        </div>
+                        
+                        <div class="flex flex-col sm:flex-row sm:items-center text-sm text-gray-300 space-y-2 sm:space-y-0 sm:space-x-6">
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-2 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                {{ reg.event.time|time:"g:i A" }}
+                            </span>
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-2 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                {{ reg.event.venue }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="glass-panel p-12 text-center mt-8">
+            <svg class="w-16 h-16 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.5 21a2 2 0 002-2V9.5L12 5 7.5 9.5V19a2 2 0 002 2h5z"></path></svg>
+            <h3 class="text-xl font-medium text-white mb-2">No Registrations Yet</h3>
+            <p class="text-gray-400 mb-6">You haven't registered for any events. Discover what's happening around you.</p>
+            <a href="{% url 'home' %}" class="btn-liquid inline-block font-semibold">Explore Events</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

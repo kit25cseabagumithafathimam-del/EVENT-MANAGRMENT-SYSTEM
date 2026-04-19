@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Log In | EventLiquid{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center min-h-[70vh]">
+    <div class="glass-panel w-full max-w-md p-8 relative overflow-hidden">
+        <!-- Decoration -->
+        <div class="absolute -top-10 -right-10 w-40 h-40 bg-purple-500 rounded-full mix-blend-multiply filter blur-2xl opacity-20"></div>
+        <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-indigo-500 rounded-full mix-blend-multiply filter blur-2xl opacity-20"></div>
+        
+        <div class="relative z-10 text-center mb-8">
+            <h2 class="text-3xl font-extrabold text-white">Welcome Back</h2>
+            <p class="text-gray-400 mt-2 text-sm">Sign in to manage your events and registrations</p>
+        </div>
+
+        {% if form.non_field_errors %}
+        <div class="glass-panel p-4 mb-6 border border-red-500/50 bg-red-500/10 text-red-200 rounded-xl relative z-10 text-sm">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <form method="POST" class="relative z-10 space-y-6">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field.errors }}
+                    <input type="{{ field.field.widget.input_type }}" name="{{ field.html_name }}" id="{{ field.id_for_label }}" class="glass-input" required>
+                </div>
+            {% endfor %}
+            
+            <div class="flex items-center justify-between mt-4">
+                <div class="flex items-center">
+                    <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 bg-gray-800 border-gray-600 rounded focus:ring-purple-500">
+                    <label for="remember-me" class="ml-2 block text-sm text-gray-400">Remember me</label>
+                </div>
+                <div class="text-sm">
+                    <a href="#" class="font-medium text-purple-400 hover:text-purple-300">Forgot password?</a>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-liquid w-full py-3 mt-6 text-lg tracking-wide rounded-xl">Sign In</button>
+        </form>
+
+        <p class="mt-8 text-center text-sm text-gray-400 relative z-10">
+            Don't have an account? 
+            <a href="{% url 'signup' %}" class="font-medium text-indigo-400 hover:text-indigo-300 transition">Create one</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
