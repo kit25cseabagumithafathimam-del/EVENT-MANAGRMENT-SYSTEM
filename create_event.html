@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Event | EventLiquid{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto py-8">
+    <div class="glass-panel p-8 md:p-10 relative overflow-hidden">
+        <!-- Decoration -->
+        <div class="absolute -top-10 right-0 w-64 h-64 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 pointer-events-none"></div>
+
+        <div class="mb-8">
+            <h2 class="text-3xl font-extrabold text-white">Create New Event</h2>
+            <p class="text-gray-400 mt-2">Fill in the details to publish your event to the community.</p>
+        </div>
+
+        <form method="POST" class="relative z-10 space-y-6">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Title (Full Width) -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-300 mb-1" for="{{ form.title.id_for_label }}">Event Title</label>
+                    <input type="text" name="{{ form.title.html_name }}" id="{{ form.title.id_for_label }}" class="glass-input" required>
+                </div>
+
+                <!-- Description (Full Width) -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-300 mb-1" for="{{ form.description.id_for_label }}">Description</label>
+                    <textarea name="{{ form.description.html_name }}" id="{{ form.description.id_for_label }}" rows="4" class="glass-input" required></textarea>
+                </div>
+
+                <!-- Date -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1" for="{{ form.date.id_for_label }}">Date</label>
+                    <input type="date" name="{{ form.date.html_name }}" id="{{ form.date.id_for_label }}" class="glass-input" required>
+                </div>
+
+                <!-- Time -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1" for="{{ form.time.id_for_label }}">Time</label>
+                    <input type="time" name="{{ form.time.html_name }}" id="{{ form.time.id_for_label }}" class="glass-input" required>
+                </div>
+
+                <!-- Venue -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-300 mb-1" for="{{ form.venue.id_for_label }}">Venue</label>
+                    <input type="text" name="{{ form.venue.html_name }}" id="{{ form.venue.id_for_label }}" class="glass-input" required>
+                </div>
+
+                <!-- Max Capacity -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1" for="{{ form.max_capacity.id_for_label }}">Max Capacity</label>
+                    <input type="number" name="{{ form.max_capacity.html_name }}" id="{{ form.max_capacity.id_for_label }}" class="glass-input" min="1" required>
+                </div>
+
+                <!-- Category -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1" for="{{ form.category.id_for_label }}">Category</label>
+                    <select name="{{ form.category.html_name }}" id="{{ form.category.id_for_label }}" class="glass-input appearance-none">
+                        {% for group_val, group_label in form.category.field.choices %}
+                            <option value="{{ group_val }}" class="bg-gray-800">{{ group_label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="pt-6 flex items-center justify-end border-t border-gray-700/50 mt-8">
+                <a href="{% url 'dashboard' %}" class="text-gray-400 hover:text-white mr-6 font-medium transition">Cancel</a>
+                <button type="submit" class="btn-liquid py-3 px-8 text-lg rounded-xl">Publish Event</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
